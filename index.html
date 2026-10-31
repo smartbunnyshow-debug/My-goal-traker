@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#173b72">
 <title>My Goals Tracker</title>
+ <link rel="manifest" href="./manifest.json">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172033;font-family:Arial,sans-serif}
 header{background:linear-gradient(135deg,#173b72,#2563eb);color:#fff;padding:25px 16px;text-align:center}
@@ -138,5 +139,13 @@ $('homeReset').addEventListener('click',reset);
 buildGoalInputs();renderCalendar();renderProgress();
 })();
 </script>
+ <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js")
+      .catch(error => console.log("SW Error:", error));
+  });
+}
+ </script>
 </body>
 </html>
