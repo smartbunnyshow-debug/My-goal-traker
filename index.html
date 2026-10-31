@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#173b72">
+<title>My Goals Tracker</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172033;font-family:Arial,sans-serif}
+header{background:linear-gradient(135deg,#173b72,#2563eb);color:#fff;padding:25px 16px;text-align:center}
+header h1{margin:0 0 7px;font-size:25px}header p{margin:0;color:#e2eaff;font-size:13px}
+main{max-width:900px;margin:auto;padding:14px}
+.page{display:none}.page.active{display:block}
+.home-title{margin:7px 2px 14px;font-size:19px}
+.menu-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.menu-card{background:#fff;border:1px solid #e0e7f0;border-radius:14px;padding:16px;box-shadow:0 3px 12px #1b31500b}
+.menu-card h2{font-size:17px;margin:0 0 7px}.menu-card p{font-size:13px;line-height:1.5;color:#64748b;margin:0 0 13px}
+.btn{border:0;border-radius:9px;background:#2459b7;color:white;padding:11px 15px;font-size:14px;font-weight:bold;cursor:pointer}
+.btn.secondary{background:#eaf1ff;color:#1d4d9b}.btn.danger{background:#fff0f0;color:#b42323;border:1px solid #ffd1d1}
+.btn:active{transform:scale(.99)}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 0 13px}
+.topbar h2{font-size:19px;margin:0}.back{background:#e8eef8;color:#24436e;border:0;border-radius:8px;padding:9px 12px;font-weight:bold}
+.card{background:white;border:1px solid #e0e7f0;border-radius:13px;padding:14px;margin-bottom:13px}
+.card h3{font-size:16px;margin:0 0 12px}
+.goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.goal-field label{display:block;font-size:12px;font-weight:bold;color:#526078;margin-bottom:5px}
+.goal-field input{width:100%;padding:11px;border:1px solid #bdcadd;border-radius:8px;font-size:14px}
+.goal-field input:focus{outline:2px solid #93baff;border-color:#2563eb}
+.help{font-size:12px;line-height:1.5;color:#64748b;margin:10px 0 0}
+.month-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.month-row select{padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:white;font-size:14px}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.weekday{text-align:center;font-size:11px;font-weight:bold;color:#64748b;padding:7px 0}
+.day{background:#fbfcfe;border:1px solid #dce4ef;border-radius:8px;min-height:80px;padding:5px 3px;display:flex;flex-direction:column;gap:5px}
+.day.empty{border:0;background:transparent}
+.daynum{font-size:12px;font-weight:bold;text-align:center}
+.daybuttons{display:flex;justify-content:center;flex-wrap:wrap;gap:3px}
+.mark{width:24px;height:24px;border:1px solid #cbd5e1;border-radius:6px;background:#fff;font-size:13px;font-weight:bold;padding:0;cursor:pointer}
+.mark.yes{background:#dcfce7;border-color:#4ade80;color:#166534}
+.mark.no{background:#fee2e2;border-color:#f87171;color:#b91c1c}
+.legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12px;color:#526078;margin-top:10px}
+.legend b{font-size:16px}
+.totals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.total{background:#f7f9fc;border:1px solid #e2e8f0;border-radius:9px;padding:11px}
+.total span{font-size:12px;color:#526078;overflow-wrap:anywhere}
+.total strong{display:block;font-size:22px;color:#15803d;margin:5px 0}
+.total small{font-size:11px;color:#b91c1c}
+.progress-table{width:100%;border-collapse:collapse;min-width:440px}
+.progress-table th,.progress-table td{padding:10px 7px;border-bottom:1px solid #e8edf4;text-align:left;font-size:13px}
+.progress-table th{color:#64748b;background:#f8fafc}
+.table-scroll{overflow-x:auto}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+@media(min-width:650px){.menu-grid{grid-template-columns:1fr 1fr}.goal-grid{grid-template-columns:repeat(5,1fr)}.totals{grid-template-columns:repeat(5,1fr)}.day{min-height:94px}.mark{width:26px;height:26px}}
+@media(max-width:370px){.day{min-height:72px;padding:4px 1px}.mark{width:21px;height:21px;font-size:12px}.calendar{gap:2px}.weekday{font-size:10px}}
+</style>
+</head>
+<body>
+<header><h1>My Goals Tracker</h1><p>Set your goals · Track every day · See your progress</p></header>
+<main>
+<section id="home" class="page active">
+ <h2 class="home-title">Welcome to your Goal Dashboard</h2>
+ <div class="menu-grid">
+  <article class="menu-card"><h2>🎯 Target Your Goals</h2><p>Apne 5 important goals likho ya unke naam badlo.</p><button class="btn" data-go="targets">Target Your Goals</button></article>
+  <article class="menu-card"><h2>📅 Open Tracker Calendar</h2><p>Calendar mein har date ke saamne apne goals ko tick ya cross karo.</p><button class="btn" data-go="calendar">Open Tracker Calendar</button></article>
+  <article class="menu-card"><h2>📊 Track Your Goals Progress</h2><p>Har goal ke total working days aur missed days dekho.</p><button class="btn" data-go="progress">Track Your Goals Progress</button></article>
+  <article class="menu-card"><h2>🗓️ Open New Calendar</h2><p>Apni pasand ka month aur year select karke uska tracker kholo.</p><button class="btn" data-go="newcalendar">Open New Calendar</button></article>
+  <article class="menu-card"><h2>🔄 Reset Your Goals / Add New Goal</h2><p>Goal names update karo ya naya tracking setup shuru karo.</p><div class="actions"><button class="btn secondary" data-go="targets">Add / Edit Goals</button><button class="btn danger" id="homeReset">Reset Goals</button></div></article>
+ </div>
+</section>
+
+<section id="targets" class="page">
+ <div class="topbar"><h2>🎯 Target Your Goals</h2><button class="back" data-go="home">← Home</button></div>
+ <div class="card"><h3>Write your 5 goals</h3><div class="goal-grid" id="goalInputs"></div><p class="help">Naam type karte hi save ho jayega. Yehi 5 goals tumhare har monthly calendar mein rahenge.</p></div>
+ <button class="btn" data-go="home">Save & Go Home</button>
+</section>
+
+<section id="calendar" class="page">
+ <div class="topbar"><h2>📅 Tracker Calendar</h2><button class="back" data-go="home">← Home</button></div>
+ <div class="card"><div class="month-row"><label for="monthSelect">Month:</label><select id="monthSelect"></select></div><div class="legend"><span><b style="color:#15803d">✓</b> Worked</span><span><b style="color:#b91c1c">✕</b> Missed</span><span>Blank = Not marked</span></div></div>
+ <div class="card"><div id="calendarGrid" class="calendar"></div><p class="help">Har date ke andar 5 goals ke liye ✓ aur ✕ buttons hain. Button dabane par progress turant save hota hai.</p></div>
+</section>
+
+<section id="progress" class="page">
+ <div class="topbar"><h2>📊 Goals Progress</h2><button class="back" data-go="home">← Home</button></div>
+ <div class="card"><div class="month-row"><label for="progressMonth">Month:</label><select id="progressMonth"></select></div></div>
+ <div class="card"><h3>Monthly summary</h3><div id="totalCards" class="totals"></div></div>
+ <div class="card"><h3>Progress details</h3><div class="table-scroll"><table class="progress-table"><thead><tr><th>Goal</th><th>Worked days</th><th>Missed days</th><th>Not marked</th></tr></thead><tbody id="progressRows"></tbody></table></div></div>
+</section>
+
+<section id="newcalendar" class="page">
+ <div class="topbar"><h2>🗓️ Open New Calendar</h2><button class="back" data-go="home">← Home</button></div>
+ <div class="card"><h3>Choose month and year</h3><div class="month-row"><select id="newMonth"></select><select id="newYear"></select><button class="btn" id="openSelected">Open Calendar</button></div><p class="help">Har month ka tracker alag save hoga. Purane months ka data delete nahi hoga.</p></div>
+</section>
+</main>
+<script>
+(()=>{
+const STORE='goals_dashboard_v1';
+const names=['','','','',''];
+let state={goals:names,months:{}};
+try{const parsed=JSON.parse(localStorage.getItem(STORE)||'null');if(parsed){state.goals=Array.isArray(parsed.goals)?parsed.goals.slice(0,5):names;state.months=parsed.months||{};}}catch(e){}
+while(state.goals.length<5)state.goals.push('');
+let activeMonth='2026-11';
+const $=id=>document.getElementById(id);
+const monthLabel=k=>{let [y,m]=k.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});};
+const monthKey=(y,m)=>y+'-'+String(m+1).padStart(2,'0');
+function save(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){alert('Browser storage full or unavailable. Please keep a backup.');}}
+function marksFor(k){if(!state.months[k])state.months[k]={};return state.months[k];}
+function goalName(i){return (state.goals[i]||'').trim()||'Goal '+(i+1);}
+function show(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));if(page==='calendar')renderCalendar();if(page==='progress')renderProgress();}
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+function buildGoalInputs(){const el=$('goalInputs');el.innerHTML='';for(let i=0;i<5;i++){const wrap=document.createElement('div');wrap.className='goal-field';const lab=document.createElement('label');lab.textContent='Goal '+(i+1);const inp=document.createElement('input');inp.placeholder=['e.g. Study','e.g. Exercise','Goal 3','Goal 4','Goal 5'][i];inp.maxLength=35;inp.value=state.goals[i]||'';inp.addEventListener('input',()=>{state.goals[i]=inp.value;save();});wrap.append(lab,inp);el.appendChild(wrap);}}
+function fillMonthSelect(sel,selected){sel.innerHTML='';for(let y=2024;y<=2035;y++)for(let m=0;m<12;m++){const k=monthKey(y,m),o=document.createElement('option');o.value=k;o.textContent=monthLabel(k);sel.appendChild(o);}sel.value=selected;}
+fillMonthSelect($('monthSelect'),activeMonth);fillMonthSelect($('progressMonth'),activeMonth);
+$('monthSelect').addEventListener('change',()=>{activeMonth=$('monthSelect').value;renderCalendar();});
+$('progressMonth').addEventListener('change',()=>{activeMonth=$('progressMonth').value;renderProgress();});
+function renderCalendar(){
+ $('monthSelect').value=activeMonth;const grid=$('calendarGrid');grid.innerHTML='';
+ ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{const w=document.createElement('div');w.className='weekday';w.textContent=d;grid.appendChild(w);});
+ const [y,m]=activeMonth.split('-').map(Number),first=new Date(y,m-1,1).getDay(),count=new Date(y,m,0).getDate(),marks=marksFor(activeMonth);
+ for(let i=0;i<first;i++){const blank=document.createElement('div');blank.className='day empty';grid.appendChild(blank);}
+ for(let d=1;d<=count;d++){const box=document.createElement('div');box.className='day';const num=document.createElement('div');num.className='daynum';num.textContent=d;box.appendChild(num);const controls=document.createElement('div');controls.className='daybuttons';
+  for(let g=0;g<5;g++){const key=d+'_'+g,status=marks[key]||'';const yes=document.createElement('button');yes.type='button';yes.className='mark'+(status==='yes'?' yes':'');yes.textContent='✓';yes.title=goalName(g)+' worked';yes.setAttribute('aria-label',d+' '+monthLabel(activeMonth)+', '+goalName(g)+', worked');yes.addEventListener('click',()=>toggle(d,g,'yes'));
+   const no=document.createElement('button');no.type='button';no.className='mark'+(status==='no'?' no':'');no.textContent='✕';no.title=goalName(g)+' missed';no.setAttribute('aria-label',d+' '+monthLabel(activeMonth)+', '+goalName(g)+', missed');no.addEventListener('click',()=>toggle(d,g,'no'));controls.append(yes,no);}
+  box.appendChild(controls);grid.appendChild(box);
+ }
+}
+function toggle(d,g,v){const marks=marksFor(activeMonth),k=d+'_'+g;if(marks[k]===v)delete marks[k];else marks[k]=v;save();renderCalendar();}
+function renderProgress(){
+ $('progressMonth').value=activeMonth;const [y,m]=activeMonth.split('-').map(Number),count=new Date(y,m,0).getDate(),marks=marksFor(activeMonth),cards=$('totalCards'),rows=$('progressRows');cards.innerHTML='';rows.innerHTML='';
+ for(let g=0;g<5;g++){let yes=0,no=0;for(let d=1;d<=count;d++){if(marks[d+'_'+g]==='yes')yes++;if(marks[d+'_'+g]==='no')no++;}const card=document.createElement('div');card.className='total';const n=document.createElement('span');n.textContent=goalName(g);const w=document.createElement('strong');w.textContent=yes+' days';const miss=document.createElement('small');miss.textContent='Missed: '+no+' days';card.append(n,w,miss);cards.appendChild(card);
+ const tr=document.createElement('tr');[goalName(g),yes,no,count-yes-no].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td);});rows.appendChild(tr);}
+}
+function fillNewPicker(){for(let m=0;m<12;m++){const o=document.createElement('option');o.value=m;o.textContent=new Date(2026,m,1).toLocaleDateString('en-US',{month:'long'});$('newMonth').appendChild(o);}for(let y=2024;y<=2035;y++){const o=document.createElement('option');o.value=y;o.textContent=y;$('newYear').appendChild(o);}const [y,m]=activeMonth.split('-').map(Number);$('newMonth').value=m-1;$('newYear').value=y;}
+fillNewPicker();
+$('openSelected').addEventListener('click',()=>{activeMonth=monthKey(Number($('newYear').value),Number($('newMonth').value));fillMonthSelect($('monthSelect'),activeMonth);fillMonthSelect($('progressMonth'),activeMonth);show('calendar');});
+function reset(){if(confirm('Reset karne se sabhi months ka progress aur 5 goal names delete ho jayenge. Kya sure ho?')){state={goals:['','','','',''],months:{}};save();buildGoalInputs();activeMonth='2026-11';fillMonthSelect($('monthSelect'),activeMonth);fillMonthSelect($('progressMonth'),activeMonth);show('home');}}
+$('homeReset').addEventListener('click',reset);
+buildGoalInputs();renderCalendar();renderProgress();
+})();
+</script>
+</body>
+</html>
