@@ -1,0 +1,19 @@
+{
+  "name": "My Goals Tracker",
+  "short_name": "Goals Tracker",
+  "description": "Track your daily goals and progress",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f6fb",
+  "theme_color": "#173b72",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
